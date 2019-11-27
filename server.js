@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const morgan = require('morgan');
 const cors = require('cors');
+const bodyParser = require('body-parser')
 
 const app = express();
 const { PORT, DATABASE_URL } = require("./config");
@@ -13,6 +14,8 @@ const connectDb = () => {
 
 app.use(morgan('common'));
 app.use(cors());
+// parse various different custom JSON types as JSON
+app.use(bodyParser.json({ type: 'application/*+json' }))
 
  connectDb().then(async () => {
   app.listen(PORT, () =>
@@ -33,6 +36,6 @@ app.post("/", function (req, res) {
   Person.create(newPerson)
   console.log(Person, 'person collection');
 
-  res.send(Person);
+  res.json(newPerson);
 });
 

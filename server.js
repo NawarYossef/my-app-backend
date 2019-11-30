@@ -34,14 +34,14 @@ app.get("/", async (req, res, e)  => {
 
 // Save
 app.post("/save", async (req, res, e) => {
-  const newPerson = {
+  const newPersonData = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
   }
   try {
-    await Person.create(newPerson)
-    .then(newPersonData => {
-      res.status(201).json(newPersonData);
+    await Person.create(newPersonData)
+    .then(personCreated => {
+      res.status(201).json(personCreated);
     });
   } catch (e) {
     res.status(500).send(e);
@@ -74,7 +74,6 @@ app.put("/update/:id", async (req, res, err) => {
 app.put("/delete/:id", async (req, res, err) => {
   const queryId = req.params.id;
   let removedPerson;
-  
   try {
     removedPerson = await Person.findByIdAndDelete(req.params.id)
 

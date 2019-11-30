@@ -20,6 +20,7 @@
     "mongodb": "^3.3.4",
     "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
+    "travis-cli": "^1.0.9",
     "validator": "^12.1.0"
   }
 }

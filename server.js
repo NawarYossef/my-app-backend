@@ -21,22 +21,30 @@ app.use(bodyParser.json());
   );
 });
 
-app.get("/", (req, res)  => {
-  res.send({"hello":"world"});
+app.get("/", async (req, res, e)  => {
+  try {
+
+  } catch(e) {
+    res.status(404).send(e);
+  }
+  const allUsers = await Person.find();
+  res.send(allUsers);
 });
 
 
 // Save
-app.post("/save", async (req, res, err) => {
+app.post("/save", async (req, res, e) => {
   const newPerson = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
   }
   try {
-    await Person.create(newPerson);
-    res.status(201).json(person);
-  } catch (err) {
-    res.status(500).send(err);
+    await Person.create(newPerson)
+    .then(newPersonData => {
+      res.status(201).json(newPersonData);
+    });
+  } catch (e) {
+    res.status(500).send(e);
   }
 });
 
@@ -46,24 +54,18 @@ app.put("/update/:id", async (req, res, err) => {
   let resData;
   
   try {
-    await Person.findById(req.params.id, function (e, doc) {
-      if (e) {
-        return new Error;
+    await Person.findById(req.params.id)
+    .then((doc) => {
+      if (!doc) {
+        throw 'User not found';
       }
       doc.firstName = req.body.firstName
       doc.lastName = req.body.lastName
       doc.save();
-    })
-
-    await Person.find({firstName:req.body.firstName}, function(e, doc) {
-      if (e) {
-        return new Error;
-      }
       resData = doc;
     })
     res.status(201).json(resData);
   } catch (e) {
-    console.log(e);
     res.status(500).send(e);
   }
 });
@@ -71,14 +73,16 @@ app.put("/update/:id", async (req, res, err) => {
 // DELETE
 app.put("/delete/:id", async (req, res, err) => {
   const queryId = req.params.id;
+  let removedPerson;
   
   try {
-    const removedPerson = await Person.findByIdAndDelete(req.params.id)
+    removedPerson = await Person.findByIdAndDelete(req.params.id)
 
     if (!removedPerson) {
-      res.status(404).send("No item found")
+      throw 'User not found'
     };
-    res.status(200).send();
+
+    res.status(201).json(removedPerson);
   } catch (e) {
     res.status(500).send(e)
   }

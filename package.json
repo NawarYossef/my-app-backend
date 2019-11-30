@@ -5,7 +5,7 @@
   "main": "main.js",
   "start": "npm run build && node server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start_local": "node -r dotenv/config server.js",
     "live": "nodemon server.js"
   },
@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mocha": "^6.2.2",
     "mongodb": "^3.3.4",
     "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
